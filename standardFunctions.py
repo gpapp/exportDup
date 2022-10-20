@@ -195,7 +195,7 @@ def generate_id (node):
     if 'business_capability_index' in node.slots:
         curindex=node.slots['business_capability_index']
     else:
-        return "0"
+        return ""
     if key in node.slots:
         parent=node.slots[key]
         if type(parent)==list:
@@ -217,8 +217,6 @@ def generate_id (node):
 def printRec2 (f,node):
         name = normalizeStr(node.name)
         level = node.slots['business_capability_level']
-        if level is list:
-            level = level[0]
         if 'business_capability_index' in node.slots:
             index = node.slots['business_capability_index']
         else:
