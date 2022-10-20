@@ -195,7 +195,7 @@ def generate_id (node):
     if 'business_capability_index' in node.slots:
         curindex=node.slots['business_capability_index']
     else:
-        curindex=0
+        return "0"
     if key in node.slots:
         parent=node.slots[key]
         if type(parent)==list:
@@ -204,13 +204,13 @@ def generate_id (node):
                 parid=generate_id(curparent)
                 if parid!="":
                     parid=parid+"."
-                retval.append(curindex)
+                retval.append(parid+curindex)
             return retval
         else:
             parid=generate_id(parent)
             if parid!="":
                 parid=parid+"."
-            return generate_id(parent)+"."+curindex
+            return parid+curindex
     else:
         return ""
 
@@ -228,15 +228,17 @@ def printRec2 (f,node):
             for i, curid in enumerate(id):
                 f.write(
                     "\"" + curid                            + "\","+
+                    node.id                       + ","+
                     level[i]                      + ","+
                     str(index)                    + ","+
                     name                          + "\n")
         else:
             f.write(
              "\"" + id                            + "\","+
-                    str(level)                    + ","+
-                    str(index)                    + ","+
-                    name                                                    + "\n")
+                     node.id                       + ","+
+                     str(level)                    + ","+
+                     str(index)                    + ","+
+                     name                                                    + "\n")
 
 def normalizeStr (x):
     return str(x.encode("ascii",'ignore').decode("ascii")).replace("\"","\"\"").replace(",","\,") if x is not None else ""
