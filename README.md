@@ -6,6 +6,7 @@ Exporting dup files from https://enterprise-architecture.org/dupcentral.php into
 https://enterprise-architecture.org/ provides great resources that can be used as reference when building capability models. They are however in the Essential repository import format, that requires access to an Essential repository. While it is possible to set up such a repo for yourself, it is quite time consuming, especially if you are only interested in the higher level models.
 
 # Pre-requisites
+* Git installed
 * Python installed and set up, so it can run from the command line.
 ** Windows users can download a version from the Microsoft Store
 ** Linux users already have it installed
@@ -15,36 +16,21 @@ https://enterprise-architecture.org/ provides great resources that can be used a
 # How to use
 ## Creating exports
 
-1. Download the model you wish to use from https://enterprise-architecture.org/dupcentral.php it is a ZIP file named dup. You will be able to use standard zip extractor after renaming it
-1. Extract the dup_import_script.py from the model to a directory of your choice
-1. Place the standard_funcions.py from this repository in the directory
-1. Replace the imports in the dup_import_script.py with
+1. Download the model you wish to use from https://enterprise-architecture.org/dupcentral.php it is a ZIP file named dup. 
+1. Check out this script from github using
+    ```git clone https://github.com/gpapp/exportDup.git```
+1. Place the dup file in the exportDup folder
+1. Navigate to the directory in the command line of your OS
+1. Execute the following command using the command
 ```
-import standardFunctions
-from standardFunctions import defineExternalRepository
-from standardFunctions import EssentialGetInstance
-from standardFunctions import addIfNotThere
-from standardFunctions import kb
-from standardFunctions import Integer
-from standardFunctions import dump_Archi
-from standardFunctions import dump_Lucid
+python main.py <YOURDUPFILENAME>.dup
 ```
-5. Add the following lines to the end of the file, where __MODELNAME__ is the name of the model. This will be prefix for the export files 
-```
-dump_Lucid('MODELNAME')
-dump_Archi('MODELNAME')
-```
-6.Navigate to the directory in the command line of your OS
-7. Execute the following command and hope for the best!
-```
-python standard_funcions.py
-```
-8. The script will create the files `MODELNAMEelements.csv`, `MODELNAMErelations.csv`, `MODELNAMEproperties.csv` to be used in Archi, and , `MODELNAMELucid.csv` for Lucid or other use
+1. The script will create the files `<YOURDUPFILENAME>elements.csv`, `<YOURDUPFILENAME>relations.csv`, `<YOURDUPFILENAME>properties.csv` to be used in Archi, and , `<YOURDUPFILENAME>Lucid.csv` for Lucid or other use
 
 ## Importing to Archi
 1. Create an empty model in Archi
 2. Use the menu File->Import->CSV data into selected model... 
-3. Select any of the generated `MODELNAMEelements.csv`, `MODELNAMErelations.csv`, `MODELNAMEproperties.csv`
+3. Select any of the generated `<YOURDUPFILENAME>elements.csv`, `<YOURDUPFILENAME>relations.csv`, `<YOURDUPFILENAME>properties.csv`
 4. Import should generate the corresponding items
 There will be no view created during the import, you'd have to do all manually.
 
@@ -64,4 +50,4 @@ __You will need enterprise licence of Lucid to use this!__
     __It may take long time for Lucid to create the model!__
 4. After the data is dumped into the sheet, select the container open the properties on the right side and use "Add New Filter" on the Data sheet
     * For __Item__
-    * Show if __Levelis equal to 2__ for L2 or __3__ for L3 chart 
+    * Show if __Level is equal to 2__ for L2 or __3__ for L3 chart 
