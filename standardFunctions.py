@@ -208,7 +208,7 @@ def printRec(f, id, name):
     l4str = id + " " + normalizeStr(name)
 
     f.write(
-        f'"{id}","{level}","{l1}","{l1str}","{l2}","{l2str}","{l3}","{l3str}","{l4}","{l4str}\n'
+        f'"{id}","{level}","{l1}","{l1str}","{l2}","{l2str}","{l3}","{l3str}","{l4}","{l4str}"\n'
     )
 
 
@@ -237,8 +237,7 @@ def generate_id(node):
         return ""
 
 
-def printRec2(f, node):
-    name = normalizeStr(node.name)
+def printRec2(f, node : Instance):
     level = node.slots["business_capability_level"]
     if "business_capability_index" in node.slots:
         index = node.slots["business_capability_index"]
@@ -247,9 +246,82 @@ def printRec2(f, node):
     id = generate_id(node)
     if type(id) == list:
         for i, curid in enumerate(id):
-            f.write(f'"{curid}",{node.id},{level[i]},{index},{name}\n')
+            l0,l1,l2,l3,l0str,l1str,l2str,l3str=extractLine(node,curid,level[i])
+            f.write(f'"{curid}",{int(level[i])+1},{l0},"{l0str}",{l1},"{l1str}",{l2},"{l2str}",{l3},"{l3str}",{node.id}\n')       
     else:
-        f.write(f'"{id}",{node.id},{level},{index},{name}\n')       
+        l0,l1,l2,l3,l0str,l1str,l2str,l3str=extractLine(node,id, level)
+        f.write(f'"{id}",{int(level)+1},{l0},"{l0str}",{l1},"{l1str}",{l2},"{l2str}",{l3},"{l3str}",{node.id}\n')       
+
+def extractLine (node,id,level):
+    name = normalizeStr(node.name)
+    l0=l1=l2=l3=l0str=l1str=l2str=l3str=""
+    if (level=='0'):
+            l0=""
+            l0str=name
+    elif (level=='1'):
+        l1=id
+        l1str=name
+        parent=node.slots['supports_business_capabilities']
+        if type(parent) == list:
+            print ("multiple parents")
+            exit(1)
+        l0str=parent.name
+    elif (level=='2'):
+        l2=id
+        l2str=name
+        parent=node.slots['supports_business_capabilities']
+        if type(parent) == list:
+            for realp in parent:
+                rpid=generate_id(realp)
+                if rpid==id[:-2]:
+                    parent=realp
+                    break
+            if type(parent) == list:
+                print ("multiple parents")
+                exit(1)
+        l1=generate_id(parent)
+        l1str=parent.name
+        parent=parent.slots['supports_business_capabilities']
+        if type(parent) == list:
+            print ("multiple parents")
+            exit(1)
+        l0str=parent.name
+    elif (level=='3'):
+        l3=id
+        l3str=name
+        parent=node.slots['supports_business_capabilities']
+        if type(parent) == list:
+            for realp in parent:
+                rpid=generate_id(realp)
+                if rpid==l3[:-2]:
+                    parent=realp
+                    break
+            if type(parent) == list:
+                print ("multiple parents")
+                exit(1)
+        l2=generate_id(parent)
+        l2str=parent.name
+        parent=parent.slots['supports_business_capabilities']
+        if type(parent) == list:
+            for realp in parent:
+                rpid=generate_id(realp)
+                if rpid==l2[:-2]:
+                    parent=realp
+                    break
+            if type(parent) == list:
+                print ("multiple parents")
+                exit(1)
+        l1=generate_id(parent)
+        l1str=parent.name
+        parent=parent.slots['supports_business_capabilities']
+        if type(parent) == list:
+            print ("multiple parents")
+            exit(1)
+        l0str=parent.name
+    else:
+        print ("In too deep level 3+ is not supported")
+        exit(1)
+    return l0,l1,l2,l3,l0str,l1str,l2str,l3str
 
 def normalizeStr(x):
     return (

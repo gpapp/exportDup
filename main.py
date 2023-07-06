@@ -32,6 +32,8 @@ newdata=[]
 for line in data:
     if re.match("W*from java\.lang.*",line):
         pass
+    elif re.match("W*import java.*",line):
+        pass
     else:
         newdata.append(line)
 
@@ -48,4 +50,4 @@ from standardFunctions import dump_Lucid
 exec("\n".join(newdata))
  
 dump_Lucid(toProcess[:-4])
-dump_Archi(toProcess[:-4])
+#dump_Archi(toProcess[:-4])
